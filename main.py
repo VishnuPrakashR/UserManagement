@@ -2,7 +2,6 @@
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from format import JSONEncoder as jsone
 from users.student import student
 from API import verification
 
