@@ -13,13 +13,13 @@ class users:
         data = self.user.getone({"Status": 1, "Email": email})
         if data:
             if Password().verify(password, data.get("Password")):
-                response = json.dumps({
+                response = {
                     "Response": "Success",
                     "Name": data.get("Name"),
                     "Id": format(data.get("_id")),
                     "Email": data.get("Email"),
                     "UserType": self.userType
-                }), 200
+                }
             else:
                 response = json.dumps({
                     "Response": "Error",
