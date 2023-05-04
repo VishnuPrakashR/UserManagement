@@ -4,7 +4,7 @@ from datetime import timedelta
 import redis
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token
+from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 
 from users.student import student
 from API import verification
@@ -50,6 +50,20 @@ def student_login():
                 "RefreshToken": refresh_token
             })
             del response["Id"]
+    else:
+        response = jsonify({"Response": apiResponse.get("Msg")}), 401
+    return response
+
+
+@app.route('/student/current', methods=['GET', 'POST'])
+@jwt_required()
+def current_student():
+    apiKey = request.headers.get("X-API-Key")
+    referer = request.headers.get("Referer")
+    apiResponse = verification().verify(apiKey, referer)
+    if apiResponse.get("Verified"):
+        user_id = get_jwt_identity()
+        response = jsonify({"Response": "Success", "StudentId": user_id})
     else:
         response = jsonify({"Response": apiResponse.get("Msg")}), 401
     return response

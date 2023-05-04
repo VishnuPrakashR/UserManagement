@@ -15,3 +15,4 @@ class Password:
 
     def verify(self, password, hashed):
         return self.pwd_context.verify(password, hashed)
+
