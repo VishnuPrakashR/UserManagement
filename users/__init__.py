@@ -15,10 +15,7 @@ class users:
             if Password().verify(password, data.get("Password")):
                 response = {
                     "Response": "Success",
-                    "Name": data.get("Name"),
-                    "Id": format(data.get("_id")),
-                    "Email": data.get("Email"),
-                    "UserType": self.userType
+                    "studentId": data.get("studentId")
                 }
             else:
                 response = json.dumps({

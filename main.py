@@ -42,14 +42,13 @@ def student_login():
         password = request.form.get('password')
         response = student().login(email, password)
         if response.get("Response") == "Success":
-            _id = response.get("Id")
-            access_token = create_access_token(identity=_id, expires_delta=ACCESS_EXPIRES)
-            refresh_token = create_refresh_token(identity=_id, expires_delta=REFRESH_EXPIRES)
+            studentId = response.get("studentId")
+            access_token = create_access_token(identity=studentId, expires_delta=ACCESS_EXPIRES)
+            refresh_token = create_refresh_token(identity=studentId, expires_delta=REFRESH_EXPIRES)
             response.update({
                 "AccessToken": access_token,
                 "RefreshToken": refresh_token
             })
-            del response["Id"]
     else:
         response = jsonify({"Response": apiResponse.get("Msg")}), 401
     return response
@@ -63,7 +62,7 @@ def current_student():
     apiResponse = verification().verify(apiKey, referer)
     if apiResponse.get("Verified"):
         user_id = get_jwt_identity()
-        response = jsonify({"Response": "Success", "StudentId": user_id})
+        response = jsonify({"Response": "Success", "studentId": user_id})
     else:
         response = jsonify({"Response": apiResponse.get("Msg")}), 401
     return response
