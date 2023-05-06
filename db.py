@@ -33,7 +33,7 @@ class Mongo:
     def put(self, data):
         collection = self.collection
         response = collection.insert_one(data)
-        self.server1.close()
+        # self.server1.close()
         return response
 
     # Put data into collection
@@ -53,8 +53,8 @@ class Mongo:
     # Update data
     def inc(self, condition, data, upsert=False):
         collection = self.collection
-        response = collection.update(condition, {"$inc": data}, upsert=upsert)
-        self.server1.close()
+        response = collection.update_one(condition, {"$inc": data}, upsert=upsert)
+        # self.server1.close()
         return response
 
     def setmany(self, condition, data, upsert=False):

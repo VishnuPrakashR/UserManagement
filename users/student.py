@@ -4,6 +4,21 @@ from . import users
 
 class student(users):
     def __init__(self):
-        self.collection = 'students'
-        self.userType = 'Student'
+        self.collection = 'users'
+        self.userType = 'STUDENT'
         super().__init__()
+
+    def register(self, formData):
+        studentId = formData.get('studentId')
+        self.email = formData.get('email')
+        self.password = formData.get('password')
+        self.data.update({
+            "studentId": studentId
+        })
+        response = super().register()
+        response.update({
+            'studentId': studentId
+        })
+        return response
+
+

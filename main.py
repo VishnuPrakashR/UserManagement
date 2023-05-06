@@ -68,6 +68,25 @@ def current_student():
     return response
 
 
+@app.route('/student/register', methods=['POST'])
+def student_register():
+    apiKey = request.headers.get("X-API-Key")
+    referer = request.headers.get("Referer")
+    apiResponse = verification().verify(apiKey, referer)
+    if apiResponse.get("Verified"):
+        response = student().register(request.form)
+        studentId = response.get("studentId")
+        access_token = create_access_token(identity=studentId, expires_delta=ACCESS_EXPIRES)
+        refresh_token = create_refresh_token(identity=studentId, expires_delta=REFRESH_EXPIRES)
+        response.update({
+            "AccessToken": access_token,
+            "RefreshToken": refresh_token
+        })
+    else:
+        response = jsonify({"Response": apiResponse.get("Msg")}), 401
+    return response
+
+
 def run():
     app.run(host="0.0.0.0", port=5002, debug=True, load_dotenv='development')
 
